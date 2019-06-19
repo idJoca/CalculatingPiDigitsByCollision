@@ -2,23 +2,15 @@ from tkinter import *
 from blocks import Block
 import time
 import math
-desiredFrameRate = 30
+from frame_rate import *
+fr_control = frame_rate_control(30)
 #nrDigits = 3
 width = 1280
 height = 400
 
-def nextDelay(): 
-    global startTime
-    end = (time.perf_counter())   
-    elapsedTime = (end - startTime)
-    delay = (1 / desiredFrameRate) - (elapsedTime) 
-    startTime = (time.perf_counter())
-    #print(delay)
-    return delay if (delay >= 0) else 0
-
 def calculate():
     global canvas, startTime   
-    startTime = (time.perf_counter()) 
+    fr_control.start()
     const = 1 / (width)    
     k = 0.051
     collided = False
@@ -27,8 +19,8 @@ def calculate():
     text = canvas.create_text(width/2, 72)
     nrDigits = int(digits.get())
     TimeSteps = 1
-    block1 = Block(10, height, 1, desiredFrameRate, 50)
-    block2 = Block(500, height, 100 **( nrDigits-1), desiredFrameRate, 100, (-100/TimeSteps))
+    block1 = Block(10, height, 1, 30, 50)
+    block2 = Block(500, height, 100 **( nrDigits-1), 30, 100, (-100/TimeSteps))
     k = - 100
     block1.show(canvas)
     block2.show(canvas)       
@@ -87,7 +79,7 @@ def calculate():
         block1.move(canvas)
         block2.move(canvas) 
         root.update()
-        time.sleep(nextDelay())
+        fr_control.delay()
     block1 = None
     block2 = None
 
